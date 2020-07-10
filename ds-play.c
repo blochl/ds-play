@@ -34,6 +34,20 @@ void* add_node() {
     return pool->s;
 }
 
+void rm_node(void* x) {
+    node_t* curr = *((node_t**)x - 1);
+    node_t* tmp = NULL;
+
+    assert(curr->next);
+
+    tmp = curr->next;
+    curr->next = tmp->next;
+    curr->s = tmp->s;
+
+    free(tmp);
+    node_count--;
+}
+
 int init_pool() {
     if (pool) {
         /* The pool is already initiated */
@@ -60,18 +74,4 @@ int free_pool() {
     node_count = 0;
 
     return 0;
-}
-
-void rm_node(void* x) {
-    node_t* curr = *((node_t**)x - 1);
-    node_t* tmp = NULL;
-
-    assert(curr->next);
-
-    tmp = curr->next;
-    curr->next = tmp->next;
-    curr->s = tmp->s;
-
-    free(tmp);
-    node_count--;
 }

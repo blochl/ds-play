@@ -6,7 +6,7 @@
 #define MEMBER_SIZE (1 << 8)
 
 typedef struct node_t {
-    void* s;
+    void* s;  /* Must come first! */
     struct node_t* next;
 } node_t;
 
@@ -22,10 +22,8 @@ void* add_node() {
 
     tmp = (node_t*)malloc(sizeof(node_t));
     assert(tmp);
-    tmp->s = (void*)((node_t**)malloc(MEMBER_SIZE + sizeof(node_t*)) + 1);
-    assert((node_t**)tmp->s - 1);
-
-    *((node_t**)tmp->s - 1) = tmp;
+    tmp->s = malloc(MEMBER_SIZE);
+    assert(tmp->s);
 
     tmp->next = pool;
     pool = tmp;
@@ -35,7 +33,7 @@ void* add_node() {
 }
 
 void rm_node(void* x) {
-    node_t* curr = *((node_t**)x - 1);
+    node_t* curr = (node_t*)(&x);
     node_t* tmp = NULL;
 
     assert(curr->next);
@@ -66,7 +64,7 @@ int free_pool() {
     node_t* tmp = NULL;
 
     while (pool) {
-        free((node_t**)pool->s - 1);
+        free(pool->s);
         tmp = pool;
         pool = pool->next;
         free(tmp);

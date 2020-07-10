@@ -14,6 +14,11 @@ static node_t* pool;
 static uint32_t node_count;
 
 int init_pool() {
+    if (pool) {
+        /* The pool is already initiated */
+        return -1;
+    }
+
     /* A dummy node for enabling the removal of "actual" nodes
      * (which must not be the last one). node_count is not increased for it. */
     pool = (node_t*)malloc(sizeof(node_t));

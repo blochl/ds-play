@@ -40,6 +40,7 @@ void rm_node(void* x) {
 
     tmp = curr->next;
     curr->next = tmp->next;
+    free(curr->s);
     curr->s = tmp->s;
 
     free(tmp);
